@@ -14,9 +14,10 @@ router.get('/author', function(req, res, next) {
   res.render('author', { title: 'Quiz' });
 });
 
-//enrutamos las peticiones GET de question y answer 
-router.get('/quizes/question', quizController.question);
-router.get('/quizes/answer', quizController.answer);
+//enrutamos las peticiones GET de quizes, quiz y answer 
+router.get('/quizes', 				quizController.index);
+router.get('/quizes/:quizId(\\d+)', 		quizController.show);
+router.get('/quizes/:quizId(\\d+)/answer',	quizController.answer);
 
 
 
