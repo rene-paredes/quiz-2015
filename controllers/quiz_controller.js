@@ -48,7 +48,8 @@ exports.new = function (req, res) {
 	var quiz = models.Quiz.build(	//crea objeto quiz
 	 				 {
 					  pregunta:"Pregunta" ,
-					  respuesta:"Respuesta"
+					  respuesta:"Respuesta",
+					  tema:"tema"
 					 }
 				);
 	res.render('quizes/new', { quiz: quiz, errors: [] });
@@ -74,7 +75,7 @@ exports.create = function (req, res) {
 			} else {
 				//guardar en BD los campos pregunta y respuesta de quiz. 
 				//especificamos los campos para evitar inyeccion de codigo
-				quiz.save( { fields: ["pregunta", "respuesta"] })
+				quiz.save( { fields: ["pregunta", "respuesta", "tema"] })
     				    .then(function() {
 				//una vez creada pregunta redirigimos a /quizes
 				res.redirect('/quizes');
@@ -88,7 +89,7 @@ exports.create = function (req, res) {
 // GET /quizes/:id/edit
 exports.edit = function (req, res) {
 	var quiz = req.quiz;
-
+	console.log('tema='+ req.quiz.tema);
 	res.render('quizes/edit', { quiz: quiz, errors: [] });
 };
 
@@ -97,6 +98,7 @@ exports.update = function (req, res) {
 	//actualizar objeto quiz del req cargado con autoload 
 	req.quiz.pregunta = req.body.quiz.pregunta;
 	req.quiz.respuesta = req.body.quiz.respuesta;
+	req.quiz.tema = req.body.quiz.tema;
 
 	//Validar los campos antes de guardar
 	req.quiz
@@ -113,7 +115,7 @@ exports.update = function (req, res) {
 				//guardar en BD los campos pregunta y respuesta de quiz. 
 				//especificamos los campos para evitar inyeccion de codigo
 				req.quiz
-				  .save( { fields: ["pregunta", "respuesta"] })
+				  .save( { fields: ["pregunta", "respuesta", "tema"] })
     				  .then(function() {
 				//una vez actualizada pregunta redirigimos a /quizes
 				res.redirect('/quizes');
