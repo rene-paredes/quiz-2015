@@ -4,6 +4,10 @@ var router = express.Router();
 //importamos mw quiz_controllers
 var quizController = require ('../controllers/quiz_controller');
 
+//importamos mw controlador de comentarios
+var commentController = require('../controllers/comment_controller');
+
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Quiz', errors: [] });
@@ -11,6 +15,9 @@ router.get('/', function(req, res, next) {
 
 //Autoload de comandos con :quizId
 router.param('quizId', quizController.load); 
+
+//autoload de coments con :commentId
+router.param('commentId',commentController.load);
 
 //GET author
 router.get('/author', function(req, res, next) {
@@ -26,6 +33,11 @@ router.post('/quizes/create',			quizController.create);
 router.get('/quizes/:quizId(\\d+)/edit', 	quizController.edit);
 router.put('/quizes/:quizId(\\d+)',		quizController.update);
 router.delete('/quizes/:quizId(\\d+)',		quizController.destroy);
+
+
+//enrutamos peticiones de comments
+router.get('/quizes/:quizId(\\d+)/comments/new', commentController.new);
+router.post('/quizes/:quizId(\\d+)/comments', commentController.create);
 
 
 
