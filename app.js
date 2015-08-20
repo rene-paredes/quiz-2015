@@ -12,6 +12,9 @@ var routes = require('./routes/index');
 //Comentamos la carga de la pagina users. Paso 2 modulo6
 //var users = require('./routes/users');
 
+var fecha_ultima_peticion = null;
+var TIMEOUT = 120;
+
 var app = express();
 
 // view engine setup
@@ -33,6 +36,7 @@ app.use(session());
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 
+//añadir mw para guardar el ultimo path antes de cada peticion siempre que no sea login o logout
 app.use(function(req, res, next){
     //guardar path en session.redir para despues de login
     if (!req.path.match(/\/login|\/logout/)) {
@@ -43,6 +47,37 @@ app.use(function(req, res, next){
     res.locals.session = req.session;
     next();
 });
+
+
+//mw de auto-logout 
+app.use(function(req,res,next){
+
+    var fecha_actual = new Date();
+
+    //si es un usuario logeado se comprueba 	
+    if (req.session.user) {
+
+        if (fecha_ultima_peticion){
+            diferencia = ((fecha_actual - fecha_ultima_peticion)/1000);
+            if (diferencia > TIMEOUT){
+                delete req.session.user;
+                fecha_ultima_peticion = null;
+                console.log("Diferencia= "+ diferencia +" segundos, destruida sesion");
+            } else {
+                fecha_ultima_peticion = fecha_actual;    
+                console.log("Diferencia= " + diferencia + " segundos");
+            }
+            
+        } else {
+            fecha_ultima_peticion = fecha_actual;
+	    console.log("Inicializar fecha peticion al hacer login");    
+        }        
+
+
+    }
+    next();
+});
+
 
 app.use('/', routes);
 //comentamos la carga de mw users. Paso2 modulo6
