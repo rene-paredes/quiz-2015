@@ -6,7 +6,9 @@ var quizController = require ('../controllers/quiz_controller');
 
 //importamos mw controlador de comentarios
 var commentController = require('../controllers/comment_controller');
-
+//importamos mw de sesion y de user 
+var sessionController = require('../controllers/session_controller');
+var userController = require('../controllers/user_controller');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -18,6 +20,12 @@ router.param('quizId', quizController.load);
 
 //autoload de coments con :commentId
 router.param('commentId',commentController.load);
+
+// Definicion de rutas de session
+router.get('/login', 	sessionController.new); // formulario login
+router.post('/login', 	sessionController.create); // crear sesión
+router.get('/logout', 	sessionController.destroy); // destruir sesión
+
 
 //GET author
 router.get('/author', function(req, res, next) {
