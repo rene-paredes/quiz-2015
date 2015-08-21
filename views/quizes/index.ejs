@@ -1,18 +1,28 @@
 <div>
-Listado de preguntas:
+  Listado de preguntas:
 <% if (quizes.length > 0) { %>
 	<table id='lista_preguntas'>
 		<% var i; for (i=0; i< quizes.length; i++) { %>
 			<tr>
-			    <td><a href="quizes/<%= quizes[i].id %>"><%= quizes[i].pregunta %></a></td>
-     			    <td><a href="quizes/<%= quizes[i].id %>/edit"><button>Editar</button></a></td>
-			    <td>
-				<form method="post" action="quizes/<%= quizes[i].id %>?_method=delete">
-		 		 <button type="submit" onClick="return confirm('Borrar: <%= quizes[i].pregunta %>');">
-				    Borrar	
-				 </button>
-				</form>
-			   </td>
+				<td>
+					<a href="quizes/<%= quizes[i].id %>">
+						[<%= quizes[i].tema %>] Pregunta: <%= quizes[i].pregunta %>
+					</a>
+				</td>
+ 				<% if (session.user) { %>
+				   <td>
+					<a href="quizes/<%= quizes[i].id %>/edit">
+						<button>editar</button>
+					</a>
+			   	  </td>
+				  <td>
+					<form method="post" action="quizes/<%= quizes[i].id %>?_method=delete">
+						<button type="submit" onclick="return confirm('Borrar: <%= quizes[i].pregunta %>');">
+							borrar
+						</button>
+					</form>
+				  </td>
+				<% } %>
 			</tr>
 		<%	} %>
 	</table>
@@ -21,9 +31,14 @@ Listado de preguntas:
 <% } %>
 </div>
 <div>
-<form>
+  <form>
 	<p>Buscar preguntas:</p>
 	<input type="text" name="search" value="Texto a buscar">
 	<input type="submit" value="Enviar">	
-</form>
+  </form>
 </div>
+<% if (session.user) { %>
+  <div>
+	<a href="/quizes/new"><button type="button">Crear pregunta</button></a>
+  </div>
+<% } %>
